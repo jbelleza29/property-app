@@ -26,8 +26,24 @@ cd property-app
 yarn install
 ```
 
-Built With
+# Built With
 Express - Fast, unopinionated, minimalist web framework for Node.js
+
 GraphQL - A query language for your API
+
 React - A JavaScript library for building user interfaces
-Sequelize - A promise-based Node.js ORM for PostgreSQL
+
+# Database
+
+PostgreSQL - An open-source relational database management system
+
+# Dependencies
+
+Sequelize - A promise-based Node.js ORM for Postgres, MySQL, MariaDB, SQLite, and Microsoft SQL Server
+
+Apollo Server - A community-maintained open-source GraphQL server that works with any GraphQL schema
+
+React Apollo - React components for Apollo GraphQL
+
+# Development Dependencies
+Nodemon - A utility that automatically restarts your Node.js server when changes are detected
