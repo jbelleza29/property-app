@@ -14,6 +14,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+p {
+  margin: 0;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -70,4 +74,32 @@ ol, ul {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.search-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  right: 0;
+}
+
+.search-results {
+  display: flex;
+  gap: 20px
+}
+
+.search-results li {
+  margin: 20px;
+}
+
+.properties-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    justify-items: flex-start;
+    border-bottom: 1px solid black;
+    padding: 10px 0;
 }

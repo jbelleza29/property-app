@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { gql } from "apollo-boost";
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
+import Card from '@mui/material/Card';
 import './App.css'
 
 const USER_PROPERTY_DETAILS = gql`
@@ -21,16 +22,19 @@ const USER_PROPERTY_DETAILS = gql`
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const onChangeInput = (value) => {
     setSearchValue(value)
   };
 
   const onClickSearch = () => {
-    userPropertyDetails();
+    if(searchValue){
+      setSearchQuery(searchValue);
+    }
   };
 
-  const [userPropertyDetails, { loading, error, data }] = useLazyQuery(USER_PROPERTY_DETAILS, {
-    variables: { input: searchValue }
+  const { loading, data } = useQuery(USER_PROPERTY_DETAILS, {
+    variables: { input: searchQuery }
   });
 
   return (
@@ -41,14 +45,16 @@ function App() {
           <input id='search-input' value={searchValue} onChange={(e) => onChangeInput(e.target.value)}></input>
           <button onClick={onClickSearch}>Search</button>
         </div>
+        {!loading ?
+        data?.search?.length > 0 &&
         <ul className="search-results">
           {data?.search?.map((item, index) => {
-            return <li key={`user-info-${index}`}>
-              <p>First Name: {item.firstName}</p>
-              <p>Last Name: {item.lastName}</p>
+            return         <Card key={`user-info-${index}`}><li >
+              <p>{item.lastName}, {item.firstName}</p>
               <h3>Properties</h3>
+              {item?.properties?.length === 0 && <p>No properties</p>}
               {item?.properties?.map((property, index2) => {
-                return <div key={`user-info-${index}-property-${index2}`}>
+                return <div className="properties-results" key={`user-info-${index}-property-${index2}`}>
                   <p>City: {property.city}</p>
                   <p>State: {property.state}</p>
                   <p>Street: {property.street}</p>
@@ -57,8 +63,10 @@ function App() {
                 </div>
               })}
             </li>
+            </Card>
           })}
         </ul>
+        : <h4>Loading...</h4>}
       </div>
     </>
   )

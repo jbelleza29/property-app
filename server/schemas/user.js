@@ -9,6 +9,6 @@ module.exports = gql`
   }
 
   type Query {
-    search: [User!]
+    search(input: String!): [User]!
   }
 `;

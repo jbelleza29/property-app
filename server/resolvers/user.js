@@ -1,11 +1,23 @@
-const { User } = require('../database/models');
+const { User, Property } = require('../database/models');
+const { Op } = require("sequelize");
 
 module.exports = {
   Query: {
-    async search(root, args, context) {
+    async search(root, { input }, context) {
       return User.findAll({
-        limit: 2,
-      });
+        where: {
+          [Op.or]: [
+            {firstName: { [Op.iLike]: `${input}%`}},
+            {lastName:{ [Op.iLike]: `${input}%`}},
+          ]
+        }
+      })
     },
   },
+
+  User: {
+    properties(property) {
+      return property.getProperties();
+    }
+  }
 };
