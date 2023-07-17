@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Property extends Model {
     /**
@@ -14,24 +12,27 @@ module.exports = (sequelize, DataTypes) => {
       Property.belongsTo(models.User, { foreignKey: 'userId', as: 'owner' });
     }
   }
-  Property.init({
-    street: DataTypes.STRING,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    zip: DataTypes.STRING,
-    rent: DataTypes.INTEGER,
-    userId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: {
-          tableName: 'User'
+  Property.init(
+    {
+      street: DataTypes.STRING,
+      city: DataTypes.STRING,
+      state: DataTypes.STRING,
+      zip: DataTypes.STRING,
+      rent: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: 'Users',
+          },
+          key: 'id',
         },
-        key: 'id'
-      }
-    }
-  }, {
-    sequelize,
-    modelName: 'Property',
-  });
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Property',
+    },
+  );
   return Property;
 };

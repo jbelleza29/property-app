@@ -4,6 +4,6 @@ module.exports = {
   Property: {
     owner(property) {
       return property.getOwner();
-    }
-  }
-}
+    },
+  },
+};

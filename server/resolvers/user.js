@@ -4,8 +4,8 @@ module.exports = {
   Query: {
     async search(root, args, context) {
       return User.findAll({
-        limit: 2
-      })
-    }
-  }
-}
+        limit: 2,
+      });
+    },
+  },
+};
