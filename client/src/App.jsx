@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { gql } from "apollo-boost";
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import Card from '@mui/material/Card';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+
 import './App.css'
 
 const USER_PROPERTY_DETAILS = gql`
@@ -20,14 +25,22 @@ const USER_PROPERTY_DETAILS = gql`
   }
 `
 
+const GET_ALL_USERS = gql`
+  query getAllUsers {
+    getAllUsers {
+      firstName
+      lastName
+    }
+  }
+`
+
 function App() {
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const onChangeInput = (value) => {
-    setSearchValue(value)
-  };
+  const [openSearch, setopenSearch] = useState(false);
 
   const onClickSearch = () => {
+    console.log(searchValue);
     if(searchValue){
       setSearchQuery(searchValue);
     }
@@ -37,14 +50,63 @@ function App() {
     variables: { input: searchQuery }
   });
 
+  const [getAllUsers, allUsers] = useLazyQuery(GET_ALL_USERS);
+
+  React.useEffect(() => {
+    (async () => {
+      if(openSearch){
+        await getAllUsers();
+      }
+    })();
+    
+  }, [getAllUsers, openSearch])
+
+  const usersMapped = allUsers?.data?.getAllUsers.map((user) => 
+            {return {firstName: user.firstName,
+                lastName: user.lastName
+              }
+          });
+
   return (
     <>
       <div>
         <div className="search-container">
-          <label htmlFor='search-input'>Search</label>
-          <input id='search-input' value={searchValue} onChange={(e) => onChangeInput(e.target.value)}></input>
-          <button onClick={onClickSearch}>Search</button>
+        <Autocomplete 
+          id="async-search"
+          sx={{ width: 300 }}
+          open={openSearch}
+          onOpen={() => {
+            setopenSearch(true);
+          }}
+          onClose={() => {
+            setopenSearch(false);
+          }}
+          options={usersMapped || []}
+          isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+          loading={allUsers?.loading}
+          getOptionLabel={(option) => `${option.lastName}, ${option.firstName}`}
+          onChange={(event, value) => {
+            setSearchValue(value.firstName)
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Search"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {allUsers?.loading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
+      )}
+        />
+         <Button variant="contained" onClick={onClickSearch}>Search</Button>
         </div>
+       
         {!loading ?
         data?.search?.length > 0 &&
         <ul className="search-results">

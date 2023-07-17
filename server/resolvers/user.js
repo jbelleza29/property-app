@@ -13,6 +13,9 @@ module.exports = {
         }
       })
     },
+    async getAllUsers(root, args, context) {
+      return User.findAll({ limit: 25 });
+    }
   },
 
   User: {

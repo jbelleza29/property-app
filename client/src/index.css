@@ -86,6 +86,10 @@ ol, ul {
   right: 0;
 }
 
+.search-container .MuiAutocomplete-root {
+  background-color: white;
+}
+
 .search-results {
   display: flex;
   gap: 20px
