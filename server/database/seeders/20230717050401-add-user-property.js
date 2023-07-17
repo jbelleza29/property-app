@@ -20,9 +20,6 @@ module.exports = {
       { returning: ["id"]},
     );
 
-
-    console.log(userIds);
-
     await queryInterface.bulkInsert('Properties', [
       {
         street: '123 Main St',
